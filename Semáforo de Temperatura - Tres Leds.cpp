@@ -33,7 +33,7 @@ void loop() {
     
     // Convertir la lectura analógica a temperatura en grados Celsius
     float voltaje = analogValue * (3.3 / 4095.0); // Conversión a voltaje (3.3V referencia, ADC de 12 bits)
-    temperaturaC = (voltaje * 100.0)+18;               // LM35 entrega 10mV por grado Celsius
+    temperaturaC = (voltaje * 100.0);               // LM35 entrega 10mV por grado Celsius
     
     Serial.print("Temperatura: ");
     Serial.print(temperaturaC);
