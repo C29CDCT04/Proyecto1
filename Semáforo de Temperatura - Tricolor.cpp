@@ -7,7 +7,7 @@ int buttonState = 0;
 float temperaturaC = 0.0;
 
 //Pines para los leds
-const int ledr = 4; //rojo
+const int ledr = 5; //rojo
 const int ledv = 18; //verde
 const int leda = 19; //azul
 
@@ -57,7 +57,7 @@ void loop() {
     if (temperaturaC < 37.0) {
       setColor(0, 255, 0);  // Verde
     } else if (temperaturaC >= 37.0 && temperaturaC <= 37.5) {
-      setColor(255, 20, 0);  // Amarillo (Rojo + Verde)
+      setColor(255, 3, 0);  // Amarillo (Rojo + Verde)
     } else if (temperaturaC > 37.5) {
       setColor(255, 0, 0);  // Rojo
     }
