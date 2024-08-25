@@ -3,19 +3,20 @@
 
 const int lm35Pin = 34;  // Pin ADC donde está conectado el LM35
 const int buttonPin = 23; // Pin donde está conectado el botón
-int buttonState = 0;
+int buttonState = HIGH;
+int lastButtonState = HIGH;
 float temperaturaC = 0.0;
 
 // Pines para los LEDs individuales
 const int ledr = 2;   // LED rojo
-const int ledv = 4;  // LED verde
-const int leda = 5;  // LED amarillo
+const int ledv = 5;   // LED verde
+const int leda = 4;   // LED amarillo
 
-//Configuración del Servo
+// Configuración del Servo
 #define servoPin 15
 #define canalPWM 9
-#define freqPWM 50 //Frecuencia Hz 
-#define resPWM 10 //Resolución bits
+#define freqPWM 50 // Frecuencia Hz 
+#define resPWM 10  // Resolución bits
 
 // Pines para los displays de 7 segmentos
 #define DIS1 21
@@ -64,18 +65,19 @@ void setup() {
   digitalWrite(DIS1, LOW);
   digitalWrite(DIS2, LOW);
   digitalWrite(DIS3, LOW);
-
 }
 
 void loop() {
   buttonState = digitalRead(buttonPin);
 
-  if (buttonState == LOW) {  // Si el botón está presionado
+  // Detectar cambio en el estado del botón
+  if (buttonState == LOW && lastButtonState == HIGH) {
+    // Si el botón fue presionado (cambio de HIGH a LOW)
     int analogValue = analogRead(lm35Pin);
     
     // Convertir la lectura analógica a temperatura en grados Celsius
     float voltaje = analogValue * (3.3 / 4095.0); // Conversión a voltaje (3.3V referencia, ADC de 12 bits)
-    temperaturaC = (voltaje * 100.0)+22;               // LM35 entrega 10mV por grado Celsius
+    temperaturaC = (voltaje * 100.0) + 22;               // LM35 entrega 10mV por grado Celsius
     
     Serial.print("Temperatura: ");
     Serial.print(temperaturaC);
@@ -88,10 +90,9 @@ void loop() {
     digito3 = tempEntera % 10;                  // Tercer dígito (unidades)
 
     if (temperaturaC < 37.0) {
-        
-        digitalWrite(ledr, LOW);
-        digitalWrite(ledv, HIGH);
-        digitalWrite(leda, LOW);
+      digitalWrite(ledr, LOW);
+      digitalWrite(ledv, HIGH);
+      digitalWrite(leda, LOW);
 
       int dutyCycle = 50;
       if (!reachedEnd) {  // Si no hemos llegado al final del movimiento
@@ -101,15 +102,14 @@ void loop() {
 
         // Verificar si hemos llegado al final del movimiento
         if (dutyCycle >= 70) {
-            reachedEnd = true;  // Se ha alcanzado el final, detener el incremento
+          reachedEnd = true;  // Se ha alcanzado el final, detener el incremento
         }
       }
 
     } else if (temperaturaC >= 37.0 && temperaturaC <= 37.5) {
-        
-        digitalWrite(ledr, LOW);
-        digitalWrite(ledv, LOW);
-        digitalWrite(leda, HIGH);
+      digitalWrite(ledr, LOW);
+      digitalWrite(ledv, LOW);
+      digitalWrite(leda, HIGH);
 
       int dutyCycle = 75;
       if (!reachedEnd) {  // Si no hemos llegado al final del movimiento
@@ -119,15 +119,14 @@ void loop() {
 
         // Verificar si hemos llegado al final del movimiento
         if (dutyCycle >= 85) { 
-            reachedEnd = true;  // Se ha alcanzado el final, detener el incremento
+          reachedEnd = true;  // Se ha alcanzado el final, detener el incremento
         }
       }
       
     } else if (temperaturaC > 37.5) {
-        
-        digitalWrite(ledr, HIGH);
-        digitalWrite(ledv, LOW);
-        digitalWrite(leda, LOW);
+      digitalWrite(ledr, HIGH);
+      digitalWrite(ledv, LOW);
+      digitalWrite(leda, LOW);
 
       int dutyCycle = 90;
       if (!reachedEnd) {  // Si no hemos llegado al final del movimiento
@@ -137,31 +136,28 @@ void loop() {
 
         // Verificar si hemos llegado al final del movimiento
         if (dutyCycle >= 115) {
-            reachedEnd = true;  // Se ha alcanzado el final, detener el incremento
+          reachedEnd = true;  // Se ha alcanzado el final, detener el incremento
         }
       }
-
     }
-
-    delay(500);
-
-    // Llamar a la función para mostrar la temperatura en los display
-    multiplexarDisplay();       // Mantener el multiplexado de los displays
-    delay(5);                   // Pequeño retardo para suavizar el multiplexado
-
   }
+
+  lastButtonState = buttonState;
+
+  // Multiplexar displays continuamente
+  multiplexarDisplay();
+  delay(5);  // Pequeño retardo para suavizar el multiplexado
 }
 
-//Función para el servo
-void initPWM(void){
-    ledcSetup(canalPWM, freqPWM, resPWM);
-    ledcAttachPin(servoPin, canalPWM);
-    ledcWrite(canalPWM, 0);
+// Función para el servo
+void initPWM(void) {
+  ledcSetup(canalPWM, freqPWM, resPWM);
+  ledcAttachPin(servoPin, canalPWM);
+  ledcWrite(canalPWM, 0);
 }
 
 // Función para multiplexar los displays y mostrar los dígitos actuales
 void multiplexarDisplay() {
-  while(buttonState == LOW) {
   // Dígito 1
   digitalWrite(DIS1, HIGH);
   desplegarDisplay(digito1);
@@ -182,5 +178,5 @@ void multiplexarDisplay() {
   desplegarPunto(0);  // No mostrar punto decimal en el tercer display
   delay(5);  // Retardo para mantener el multiplexado
   digitalWrite(DIS3, LOW);  // Apagar el display después de mostrar el dígito
-  }
 }
+
