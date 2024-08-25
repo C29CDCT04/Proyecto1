@@ -6,12 +6,12 @@ int buttonState = 0;
 float temperaturaC = 0.0;
 
 // Pines para los LEDs individuales
-const int ledr = 5;   // LED rojo
-const int ledv = 18;  // LED verde
-const int leda = 19;  // LED azul (que representará amarillo junto con el rojo)
+const int ledr = 2;   // LED rojo
+const int ledv = 4;  // LED verde
+const int leda = 5;  // LED amarillo
 
 //Configuración del Servo
-#define servoPin 2
+#define servoPin 15
 #define canalPWM 9
 #define freqPWM 50 //Frecuencia Hz 
 #define resPWM 10 //Resolución bits
@@ -45,7 +45,7 @@ void loop() {
     
     // Convertir la lectura analógica a temperatura en grados Celsius
     float voltaje = analogValue * (3.3 / 4095.0); // Conversión a voltaje (3.3V referencia, ADC de 12 bits)
-    temperaturaC = (voltaje * 100.0)+24;               // LM35 entrega 10mV por grado Celsius
+    temperaturaC = (voltaje * 100.0)+22;               // LM35 entrega 10mV por grado Celsius
     
     Serial.print("Temperatura: ");
     Serial.print(temperaturaC);
@@ -64,7 +64,7 @@ void loop() {
         delay(100);  // Retardo para hacer que el movimiento sea suave
 
         // Verificar si hemos llegado al final del movimiento
-        if (dutyCycle >= 70) {  // Aquí, 115 representa el valor máximo que quieres alcanzar
+        if (dutyCycle >= 70) {
             reachedEnd = true;  // Se ha alcanzado el final, detener el incremento
         }
       }
@@ -82,7 +82,7 @@ void loop() {
         delay(100);  // Retardo para hacer que el movimiento sea suave
 
         // Verificar si hemos llegado al final del movimiento
-        if (dutyCycle >= 85) {  // Aquí, 115 representa el valor máximo que quieres alcanzar
+        if (dutyCycle >= 85) { 
             reachedEnd = true;  // Se ha alcanzado el final, detener el incremento
         }
       }
@@ -100,7 +100,7 @@ void loop() {
         delay(100);  // Retardo para hacer que el movimiento sea suave
 
         // Verificar si hemos llegado al final del movimiento
-        if (dutyCycle >= 115) {  // Aquí, 115 representa el valor máximo que quieres alcanzar
+        if (dutyCycle >= 115) {
             reachedEnd = true;  // Se ha alcanzado el final, detener el incremento
         }
       }
