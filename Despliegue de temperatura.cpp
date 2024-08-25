@@ -161,21 +161,26 @@ void initPWM(void){
 
 // Función para multiplexar los displays y mostrar los dígitos actuales
 void multiplexarDisplay() {
+  while(buttonState == LOW) {
   // Dígito 1
   digitalWrite(DIS1, HIGH);
   desplegarDisplay(digito1);
   desplegarPunto(0);  // No activar el punto decimal en el primer display
   delay(5);  // Retardo para mantener el multiplexado
+  digitalWrite(DIS1, LOW);  // Apagar el display después de mostrar el dígito
 
   // Dígito 2
   digitalWrite(DIS2, HIGH);
   desplegarDisplay(digito2);
   desplegarPunto(1);  // Activar el punto decimal en el segundo display
   delay(5);  // Retardo para mantener el multiplexado
+  digitalWrite(DIS2, LOW);  // Apagar el display después de mostrar el dígito
 
   // Dígito 3
   digitalWrite(DIS3, HIGH);
   desplegarDisplay(digito3);
   desplegarPunto(0);  // No mostrar punto decimal en el tercer display
   delay(5);  // Retardo para mantener el multiplexado
+  digitalWrite(DIS3, LOW);  // Apagar el display después de mostrar el dígito
+  }
 }
