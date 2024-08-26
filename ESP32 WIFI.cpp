@@ -110,7 +110,7 @@ void loop() {
     
     // Convertir la lectura analógica a temperatura en grados Celsius
     float voltaje = analogValue * (3.3 / 4095.0); // Conversión a voltaje (3.3V referencia, ADC de 12 bits)
-    temperaturaC = (voltaje * 100.0) + 22;               // LM35 entrega 10mV por grado Celsius
+    temperaturaC = (voltaje * 100.0) + 25;               // LM35 entrega 10mV por grado Celsius
     
     Serial.print("Temperatura: ");
     Serial.print(temperaturaC);
@@ -127,14 +127,14 @@ void loop() {
       digitalWrite(ledv, HIGH);
       digitalWrite(leda, LOW);
 
-      int dutyCycle = 50;
+      int dutyCycle = 100;
       if (!reachedEnd) {  // Si no hemos llegado al final del movimiento
         ledcWrite(canalPWM, dutyCycle);  // Ajustar el ciclo de trabajo actual
         dutyCycle++;  // Incrementar el ciclo de trabajo para mover el servo gradualmente
         delay(100);  // Retardo para hacer que el movimiento sea suave
 
         // Verificar si hemos llegado al final del movimiento
-        if (dutyCycle >= 70) {
+        if (dutyCycle >= 125) {
           reachedEnd = true;  // Se ha alcanzado el final, detener el incremento
         }
       }
@@ -161,14 +161,14 @@ void loop() {
       digitalWrite(ledv, LOW);
       digitalWrite(leda, LOW);
 
-      int dutyCycle = 90;
+      int dutyCycle = 50;
       if (!reachedEnd) {  // Si no hemos llegado al final del movimiento
         ledcWrite(canalPWM, dutyCycle);  // Ajustar el ciclo de trabajo actual
         dutyCycle++;  // Incrementar el ciclo de trabajo para mover el servo gradualmente
         delay(100);  // Retardo para hacer que el movimiento sea suave
 
         // Verificar si hemos llegado al final del movimiento
-        if (dutyCycle >= 115) {
+        if (dutyCycle >= 70) {
           reachedEnd = true;  // Se ha alcanzado el final, detener el incremento
         }
       }
@@ -199,24 +199,25 @@ void initPWM(void) {
 
 // Función para multiplexar los displays y mostrar los dígitos actuales
 void multiplexarDisplay() {
+  
   // Dígito 1
   digitalWrite(DIS1, HIGH);
   desplegarDisplay(digito1);
   desplegarPunto(0);  // No activar el punto decimal en el primer display
-  delay(5);  // Retardo para mantener el multiplexado
+  delay(10);  // Retardo para mantener el multiplexado
   digitalWrite(DIS1, LOW);  // Apagar el display después de mostrar el dígito
 
   // Dígito 2
   digitalWrite(DIS2, HIGH);
   desplegarDisplay(digito2);
   desplegarPunto(1);  // Activar el punto decimal en el segundo display
-  delay(5);  // Retardo para mantener el multiplexado
+  delay(10);  // Retardo para mantener el multiplexado
   digitalWrite(DIS2, LOW);  // Apagar el display después de mostrar el dígito
 
   // Dígito 3
   digitalWrite(DIS3, HIGH);
   desplegarDisplay(digito3);
   desplegarPunto(0);  // No mostrar punto decimal en el tercer display
-  delay(5);  // Retardo para mantener el multiplexado
+  delay(10);  // Retardo para mantener el multiplexado
   digitalWrite(DIS3, LOW);  // Apagar el display después de mostrar el dígito
 }
